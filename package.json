@@ -1,0 +1,45 @@
+{
+  "name": "vue-tabcordion",
+  "version": "1.0.0",
+  "description": "Simple responsive commonjs tabs component for Vue.",
+  "main": "src/js/index.js",
+  "peerDependencies": {
+    "bulma": ">=0.2",
+    "vue": ">=2"
+  },
+  "watch": {
+    "vue": {
+      "patterns": [
+        "src",
+        "vue"
+      ],
+      "extensions": "vue",
+      "quiet": false
+    }
+  },
+  "scripts": {
+    "vue": "fuet -c -i 'src/vue/*.vue' -p src vue -o src/js/templates.js",
+    "prepublish": "fuet -c -i 'src/vue/*.vue' -p src vue -o src/js/templates.js",
+    "watch": "npm-watch"
+  },
+  "files": [
+    "src/js/*.js",
+    "src/scss/*.scss",
+    "LICENSE",
+    "README.md"
+  ],
+  "repository": "https://github.com/wearespindle/vue-tabcordion",
+  "keywords": [
+    "vue",
+    "bulma",
+    "tabs"
+  ],
+  "author": "Devhouse Spindle",
+  "license": "MIT",
+  "devDependencies": {
+    "npm-watch": "^0.1.9"
+  },
+  "dependencies": {
+    "mini-querystring": "^1.0.2"
+  }
+}
