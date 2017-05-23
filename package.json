@@ -29,7 +29,7 @@
     "prepublish": "fuet -c -i 'src/vue/*.vue' -p src vue -o src/js/templates.js",
     "scss": "sass src/scss/styles.scss > demo/styles.css",
     "demo": "browserify demo/index.js > demo/build.js;npm run scss;",
-    "demo_publish": "gh-pages -d demo",
+    "demo_publish": "npm run demo;gh-pages -d demo",
     "watch": "npm-watch"
   },
   "files": [
