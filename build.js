@@ -6,9 +6,12 @@ Vue.component('Tabs', Tabs)
 
 new Vue({
     el: '#app',
+    data: {
+        version: require('../package.json').version,
+    },
 })
 
-},{"../src/js/index.js":5}],2:[function(require,module,exports){
+},{"../package.json":5,"../src/js/index.js":6}],2:[function(require,module,exports){
 'use strict'
 
 var parseReg = /([^=?&]+)=?([^&]*)/g
@@ -201,13 +204,71 @@ qSet.flat      = fSet;
 module.exports = qSet;
 
 },{}],5:[function(require,module,exports){
+module.exports={
+  "name": "vue-tabcordion",
+  "version": "1.0.3",
+  "description": "Simple responsive commonjs tabs component for Vue.",
+  "main": "src/js/index.js",
+  "peerDependencies": {
+    "bulma": ">=0.2",
+    "vue": ">=2"
+  },
+  "watch": {
+    "vue": {
+      "patterns": [
+        "src/vue/*.vue"
+      ],
+      "extensions": "vue",
+      "quiet": true
+    },
+    "demo": {
+      "patterns": [
+        "demo/index.js",
+        "src/js/*.js"
+      ],
+      "extensions": "js",
+      "quiet": true
+    }
+  },
+  "scripts": {
+    "vue": "fuet -c -i 'src/vue/*.vue' -p src vue -o src/js/templates.js",
+    "prepublish": "fuet -c -i 'src/vue/*.vue' -p src vue -o src/js/templates.js",
+    "scss": "sass src/scss/styles.scss > demo/styles.css",
+    "demo": "browserify demo/index.js > demo/build.js;npm run scss;",
+    "demo_publish": "npm run demo;gh-pages -d demo",
+    "watch": "npm-watch"
+  },
+  "files": [
+    "src/js/*.js",
+    "src/scss/*.scss",
+    "LICENSE",
+    "README.md"
+  ],
+  "repository": "https://github.com/wearespindle/vue-tabcordion",
+  "keywords": [
+    "vue",
+    "bulma",
+    "tabs"
+  ],
+  "author": "Devhouse Spindle",
+  "license": "MIT",
+  "devDependencies": {
+    "gh-pages": "^1.0.0",
+    "npm-watch": "^0.1.9"
+  },
+  "dependencies": {
+    "mini-querystring": "^1.0.2"
+  }
+}
+
+},{}],6:[function(require,module,exports){
 const templates = require('./templates')
 const Tab = require('./tab')(templates.tab)
 const Tabs = require('./tabs')(templates.tabs)
 
 module.exports = {Tab, Tabs}
 
-},{"./tab":6,"./tabs":7,"./templates":8}],6:[function(require,module,exports){
+},{"./tab":7,"./tabs":8,"./templates":9}],7:[function(require,module,exports){
 module.exports = function(template) {
     return {
         render: template.r,
@@ -247,7 +308,8 @@ module.exports = function(template) {
     }
 }
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
+(function (global){
 const qs = require('mini-querystring')
 
 module.exports = function(template) {
@@ -269,20 +331,25 @@ module.exports = function(template) {
                     tab.active = true
                 }
             },
-            changeTab: function(tab) {
-                this.current = tab
+            changeTab: function(tabid, pushState) {
                 let searchState = qs.parse(location.search)
-                searchState.tabid = tab.id
-                window.history.pushState(null, null, `?${qs.stringify(searchState)}`)
-
                 for (let _tab of this.tabs) {
-                    if (_tab === tab) {
-                        // Push the url state when using Vue-Router.
+                    if (_tab.id === tabid) {
                         _tab.active = true
+                        this.current = _tab
+                        searchState.tabid = _tab.id
+
+                        if (pushState && global.document) {
+                            global.history.pushState(null, null, `?${qs.stringify(searchState)}`)
+                        }
                     } else {
                         _tab.active = false
                     }
                 }
+            },
+            tabFromLocation: function() {
+                let searchState = qs.parse(location.search)
+                this.changeTab(searchState.tabid, false)
             },
             removeTab: function(tab) {
                 let index = this.tabs.indexOf(tab)
@@ -290,12 +357,17 @@ module.exports = function(template) {
                 this.$el.removeChild(tab.$el)
                 tab.removeTab()
                 if (this.tabs[0]) {
-                    this.changeTab(this.tabs[0])
+                    this.changeTab(this.tabs[0].id)
                 }
             },
         },
         mounted: function() {
-            // Set active
+            if (global.document) {
+                global.addEventListener('popstate', this.tabFromLocation)
+            }
+
+
+            // Set default active
             let searchState = qs.parse(location.search)
             if (!searchState.tabid) {
                 // Set first tab active if no tabid is in the querystring.
@@ -303,9 +375,15 @@ module.exports = function(template) {
                 this.tabs[0].active = true
             }
         },
+        beforeDestroy: function() {
+            if (global.document) {
+                global.removeEventListener('popstate', this.tabFromLocation)
+            }
+        },
     }
 }
 
-},{"mini-querystring":2}],8:[function(require,module,exports){
-module.exports.tab={r:function r(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{class:['tab', {'is-active': _vm.active}]},[_vm._t("default")],2)}};module.exports.tabs={r:function r(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('div',{staticClass:"tabs"},[_c('ul',_vm._l((_vm.tabs),function(tab){return _c('li',{class:[{'is-active': _vm.current === tab},'item'],on:{"click":function($event){_vm.changeTab(tab)}}},[_c('a',[_vm._v(_vm._s(tab.title))])])}))]),_c('div',{staticClass:"content tabs-content"},[_vm._t("default")],2)])}};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"mini-querystring":2}],9:[function(require,module,exports){
+module.exports.tab={r:function r(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{class:['tab', {'is-active': _vm.active}]},[_vm._t("default")],2)}};module.exports.tabs={r:function r(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('div',{staticClass:"tabs"},[_c('ul',_vm._l((_vm.tabs),function(tab){return _c('li',{class:[{'is-active': _vm.current === tab},'item'],on:{"click":function($event){_vm.changeTab(tab.id, true)}}},[_c('a',[_vm._v(_vm._s(tab.title))])])}))]),_c('div',{staticClass:"content tabs-content"},[_vm._t("default")],2)])}};
 },{}]},{},[1]);

@@ -5,4 +5,7 @@ Vue.component('Tabs', Tabs)
 
 new Vue({
     el: '#app',
+    data: {
+        version: require('../package.json').version,
+    },
 })
