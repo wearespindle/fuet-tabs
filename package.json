@@ -25,11 +25,11 @@
     }
   },
   "scripts": {
-    "vue": "fuet -c -i 'src/vue/*.vue' -p src vue -o src/js/templates.js",
-    "prepublish": "fuet -c -i 'src/vue/*.vue' -p src vue -o src/js/templates.js",
-    "scss": "sass src/scss/styles.scss > demo/styles.css",
     "demo": "browserify demo/index.js > demo/build.js;npm run scss;",
     "demo_publish": "npm run demo;gh-pages -d demo",
+    "prepublish": "fuet -c -i 'src/vue/*.vue' -p src vue -o src/js/templates.js",
+    "scss": "sass src/scss/styles.scss > demo/styles.css",
+    "vue": "fuet -c -i 'src/vue/*.vue' -p src vue -o src/js/templates.js",
     "watch": "npm-watch"
   },
   "files": [
