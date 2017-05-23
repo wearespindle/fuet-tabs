@@ -1,6 +1,6 @@
 # vue-tabcordion
-A responsive tab component for Vue2. Currently uses hardcoded styles from
-[Bulma](http://bulma.io/).
+A responsive tab component for Vue2. Checkout the [demo](https://wearespindle.github.io/vue-tabcordion/)
+to get an idea how it works and looks like.
 
 # Usage
 This module depends on npm and commonjs. Just install in your project with:

@@ -10,16 +10,26 @@
   "watch": {
     "vue": {
       "patterns": [
-        "src",
-        "vue"
+        "src/vue/*.vue"
       ],
       "extensions": "vue",
-      "quiet": false
+      "quiet": true
+    },
+    "demo": {
+      "patterns": [
+        "demo/index.js",
+        "src/js/*.js"
+      ],
+      "extensions": "js",
+      "quiet": true
     }
   },
   "scripts": {
     "vue": "fuet -c -i 'src/vue/*.vue' -p src vue -o src/js/templates.js",
     "prepublish": "fuet -c -i 'src/vue/*.vue' -p src vue -o src/js/templates.js",
+    "scss": "sass src/scss/styles.scss > demo/styles.css",
+    "demo": "browserify demo/index.js > demo/build.js;npm run scss;",
+    "demo_publish": "gh-pages -d demo",
     "watch": "npm-watch"
   },
   "files": [
@@ -37,6 +47,7 @@
   "author": "Devhouse Spindle",
   "license": "MIT",
   "devDependencies": {
+    "gh-pages": "^1.0.0",
     "npm-watch": "^0.1.9"
   },
   "dependencies": {
