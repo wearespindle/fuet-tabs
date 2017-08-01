@@ -8,6 +8,7 @@
     "vue": ">=2"
   },
   "watch": {
+    "scss": "src/scss/styles.scss",
     "vue": {
       "patterns": [
         "src/vue/*.vue"
