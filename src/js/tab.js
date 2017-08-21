@@ -1,38 +1,26 @@
 module.exports = function(template) {
     return {
-        render: template.r,
-        staticRenderFns: template.s,
+        created: function() {
+            // Using slots, the parent Tabs component doesn't have a
+            // reference to all Tab components yet. That's why the tabs data
+            // doesn't include a reference to Tab instances yet.
+            for (let tab of this.$parent.tabs) {
+                if (tab.id === this.id) {
+                    if (!tab.instance) tab.instance = this
+                    if (tab.active) this.active = true
+                }
+            }
+        },
         data: function() {
             return {
                 active: false,
             }
         },
-        props: {
-            id: {
-                required: true,
-                type: String,
-            },
-            title: {
-                required: true,
-                type: String,
-            },
-            isActive: {
-                required: false,
-                type: Boolean,
-                default: false,
-            },
-        },
-        methods: {
-            removeTab: function() {
-                this.$destroy()
-            },
-        },
-        created: function() {
-            this.active = this.isActive
-            this.$parent.addTab(this)
-        },
-        watch: {
-
-        },
+        props: [
+            'id',
+            'title',
+        ],
+        render: template.r,
+        staticRenderFns: template.s,
     }
 }

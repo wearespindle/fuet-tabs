@@ -3,10 +3,9 @@
         <ul>
             <li
                 v-for="tab in tabs"
-                v-bind:class="[{'is-active': current === tab},'item']"
-                v-on:click="changeTab(tab.id, true)"
-            >
-                <a>{{tab.title}}</a>
+                v-bind:class="[{'is-active': currentId === tab.id},'item']"
+                v-on:click="changeTab($event, tab)">
+                <a :href="tab.uri">{{tab.title}}</a>
             </li>
         </ul>
     </div>

@@ -1,10 +1,12 @@
 {
-    "ecmaFeatures": {
-        "arrowFunctions":true,
-        "classes":true,
-        "spread":true
+    "parser": "espree",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "modules": true
+        },
+        "ecmaVersion": 8,
+        "sourceType": "module"
     },
-    "parser": "babel-eslint",
     "env": {
         "amd": false,
         "browser": true,
@@ -12,10 +14,21 @@
         "es6": true
     },
     "globals": {
-        "Vue": true
+        "Vue": true,
+        "VueRouter": true,
+        "Vuex": true,
+        "templates": true,
+        "axios": true,
+        "csrf": true,
+        "Vuelidate": true,
+        "i18n": true,
+        "I18nStore": true,
+        "translations": true,
+        "__state": true,
+        "_Vuex"
     },
     "plugins": [
-
+        "sort-class-members"
     ],
     "rules": {
         "no-alert": 0,
@@ -143,6 +156,7 @@
         "generator-star-spacing": 0,
         "guard-for-in": 0,
         "handle-callback-err": 0,
+        "indent": [2, 4, {"flatTernaryExpressions": true, "ObjectExpression": 1}],
         "init-declarations": 0,
         "key-spacing": [2, { "beforeColon": false, "afterColon": true }],
         "lines-around-comment": 0,
@@ -160,12 +174,26 @@
         "operator-assignment": [0, "always"],
         "operator-linebreak": 0,
         "padded-blocks": 0,
-        "quote-props": 0,
+        "quote-props": [2, "as-needed"],
         "quotes": [1, "single"],
         "radix": 0,
         "require-yield": 0,
         "semi": 0,
         "semi-spacing": [2, {"before": false, "after": true}],
+        "sort-class-members/sort-class-members": [2, {
+        "order": [
+                "[static-properties]",
+                "[static-methods]",
+                "[properties]",
+                "[conventional-private-properties]",
+                "constructor",
+                "[methods]",
+                "[conventional-private-methods]",
+                "[everything-else]"
+            ],
+            "accessorPairPositioning": "getThenSet",
+        }],
+        "sort-keys": [2, "asc", {"natural": true, "caseSensitive": false}],
         "sort-vars": [2, {"ignoreCase": true}],
         "space-before-function-paren": [2, "never"],
         "space-in-brackets": [0, "never"],

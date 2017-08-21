@@ -48,6 +48,8 @@
   "author": "Devhouse Spindle",
   "license": "MIT",
   "devDependencies": {
+    "eslint": "^4.4.1",
+    "eslint-plugin-sort-class-members": "^1.2.0",
     "gh-pages": "^1.0.0",
     "npm-watch": "^0.1.9"
   },

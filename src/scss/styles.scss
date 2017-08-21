@@ -1,6 +1,11 @@
 .tabs {
 
+    > ul li {
+        margin-top: 0;
+    }
+
     + .tabs-content {
+        margin-top: 2rem;
         padding: 0;
 
         .tab {
@@ -10,6 +15,5 @@
                 display: block;
             }
         }
-
     }
 }
