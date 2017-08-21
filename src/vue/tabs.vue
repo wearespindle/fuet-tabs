@@ -2,7 +2,7 @@
     <div class="tabs">
         <ul>
             <li
-                v-for="tab in tabs"
+                v-for="tab in tabs" v-if="tab.show"
                 v-bind:class="[{'is-active': currentId === tab.id},'item']"
                 v-on:click="changeTab($event, tab)">
                 <a :href="tab.uri">{{tab.title}}</a>
