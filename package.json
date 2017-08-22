@@ -1,6 +1,6 @@
 {
   "name": "vue-tabcordion",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Simple responsive commonjs tabs component for Vue.",
   "main": "src/js/index.js",
   "peerDependencies": {
