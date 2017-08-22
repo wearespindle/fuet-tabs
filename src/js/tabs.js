@@ -1,73 +1,105 @@
 module.exports = function(template) {
     return {
+        /**
+        * Remove the popstate event listener after
+        * destroying the Tabs component.
+        */
         beforeDestroy: function() {
-            // Remove the event listener again after destroying the component.
-            if (global.document) {
-                global.removeEventListener('popstate', this.tabFromLocation)
-            }
+            if (global.document) global.removeEventListener('popstate', this.popstateHandler)
         },
+        /**
+        * Set the active tab when the Tabs component is created and
+        * register an event listener for back/forward navigation events.
+        */
         created: function() {
-            this.setCurrentId()
-            if (!this.currentId) this.currentId = this.tabs[0].id
+            this.currentId = this.getCurrentTabId()
+            this.setActiveTab(this.currentId)
 
-            for (let tab of this.tabs) {
-                if (tab.id === this.currentId) tab.active = true
-                else tab.active = false
-                if (!tab.hasOwnProperty('show')) {
-                    tab.show = true
-                }
-            }
-
-            // Register a custom event listener for back/forward events.
-            if (global.document) {
-                global.addEventListener('popstate', this.tabFromLocation)
-            }
+            if (global.document) global.addEventListener('popstate', this.popstateHandler)
         },
+        /**
+        * The `currentId` is a reactive property that's being used
+        * to set the active tab element.
+        * @returns {Object} - Reactive properties for the Tabs component.
+        */
         data: function() {
             return {
                 currentId: null,
-                uri: null,
             }
         },
         methods: {
+            /**
+            * Handles click-events on the tab elements.
+            * @param {Event} e - The original MouseClick event.
+            * @param {Object} tab - The current tab that was passed along.
+            */
             changeTab: function(e, tab) {
-                e.preventDefault()
-                // Directly modifies url's, bypassing the router, so the
-                // route isn't getting replayed.
-                if (global.document) {
-                    global.history.pushState(null, null, tab.uri)
-                }
+                if (e) e.preventDefault()
+                if (global.document) global.history.pushState(null, null, tab.uri)
+
                 this.currentId = tab.id
-
-                for (let _tab of this.tabs) {
-                    if (_tab.id === tab.id) _tab.instance.active = true
-                    else _tab.instance.active = false
-                }
+                this.setActiveTab(this.currentId)
             },
-            setCurrentId: function() {
-                // Resolve the original route; not a possible alias.
-                const aliasRoute = this.$router.currentRoute
-                const aliasPath = aliasRoute.path
-
-                const originalLocation = this.$router.resolve({
+            /**
+            * Figure out the currently active tab and return it's id. Return
+            * the first tab's id when no tab is active.
+            * @returns {String} - The active tab id.
+            */
+            getCurrentTabId: function() {
+                let currentId
+                const route = this.$router.currentRoute
+                const routeLocation = this.$router.resolve({
                     name: this.$router.currentRoute.name,
                     params: this.$router.currentRoute.params,
                 })
-                const originalRoute = originalLocation.route
-                const originalPath = originalRoute.path
 
+                if (route.query.tab) currentId = route.query.tab
+                else currentId = this.tabs[0].id
+
+                let match = false
                 for (let tab of this.tabs) {
-                    tab.uri = `${originalLocation.href}/${tab.id}`
-                    tab.path = `${originalRoute.path}/${tab.id}`
+                    if (tab.id === currentId) match = true
+                    tab.uri = `${routeLocation.href}?tab=${tab.id}`
+                    tab.path = `${route.path}?tab=${tab.id}`
                 }
 
-                this.currentId = aliasPath.replace(originalPath, '').replace('/', '')
+                // The tab id must be present in the tabs data, otherwise
+                // the first tab will be activated.
+                if (!match) currentId = this.tabs[0].id
+                return currentId
             },
-            tabFromLocation: function(e) {
-                this.setCurrentId()
-                for (let _tab of this.tabs) {
-                    if (_tab.id === this.currentId) _tab.instance.active = true
-                    else _tab.instance.active = false
+            /**
+            * Set the currently active tab after a navigation event, e.g.
+            * back and forward events.
+            * @param {Event} e - The original popstate event.
+            */
+            popstateHandler: function(e) {
+                this.currentId = this.getCurrentTabId()
+                this.setActiveTab(this.currentId)
+            },
+            /**
+            * Set the currently active tab. It updates both the active
+            * property of the tab data and where possible the tab's
+            * instance active property. The tab instance may or may not
+            * be available at the point that this function is used. Hides
+            * or shows tabs that should be visible under certain conditions.
+            * @param {String} tabId - Id of the tab to activate.
+            */
+            setActiveTab: function(tabId) {
+                for (let tab of this.tabs) {
+                    if (tab.id === tabId) {
+                        tab.active = true
+                        if (tab.instance) tab.instance.active = true
+                    } else {
+                        tab.active = false
+                        if (tab.instance) tab.instance.active = false
+                    }
+
+                    if (!tab.hasOwnProperty('show')) {
+                        tab._show = true
+                    } else if (typeof tab.show === 'function') {
+                        tab._show = tab.show()
+                    }
                 }
             },
         },
@@ -76,5 +108,11 @@ module.exports = function(template) {
         ],
         render: template.r,
         staticRenderFns: template.s,
+        watch: {
+            $route: function() {
+                this.currentId = this.getCurrentTabId()
+                this.setActiveTab(this.currentId)
+            },
+        },
     }
 }
