@@ -1,5 +1,8 @@
-<div>
-    <div class="tabs">
+<div class="tabs-container">
+    <div class="tablist tabs">
+        <div class="tablist-title">
+            <slot name="tablist"></slot>
+        </div>
         <ul>
             <li
                 v-for="tab in tabs" v-if="tab._show"
@@ -10,6 +13,9 @@
         </ul>
     </div>
     <div class="content tabs-content">
-        <slot></slot>
+        <slot name="tabs"></slot>
+        <div class="field is-grouped tabs-controls">
+            <slot name="controls"></slot>
+        </div>
     </div>
 </div>
