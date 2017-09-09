@@ -1,10 +1,9 @@
 {
-  "name": "vue-tabcordion",
-  "version": "1.0.6",
-  "description": "Simple responsive commonjs tabs component for Vue.",
+  "name": "fuet-tabs",
+  "version": "1.0.7",
+  "description": "Simple tabs component for Vue 2.",
   "main": "src/js/index.js",
   "peerDependencies": {
-    "bulma": ">=0.2",
     "vue": ">=2"
   },
   "watch": {
@@ -39,10 +38,10 @@
     "LICENSE",
     "README.md"
   ],
-  "repository": "https://github.com/wearespindle/vue-tabcordion",
+  "repository": "https://github.com/wearespindle/fuet-tabs",
   "keywords": [
     "vue",
-    "bulma",
+    "fuet",
     "tabs"
   ],
   "author": "Devhouse Spindle",
@@ -52,8 +51,5 @@
     "eslint-plugin-sort-class-members": "^1.2.0",
     "gh-pages": "^1.0.0",
     "npm-watch": "^0.1.9"
-  },
-  "dependencies": {
-    "mini-querystring": "^1.0.2"
   }
 }
