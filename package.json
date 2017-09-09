@@ -1,6 +1,6 @@
 {
   "name": "fuet-tabs",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Simple tabs component for Vue 2.",
   "main": "src/js/index.js",
   "peerDependencies": {
