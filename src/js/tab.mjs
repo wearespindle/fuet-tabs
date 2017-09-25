@@ -1,4 +1,6 @@
-module.exports = function(template) {
+import {tab} from './templates'
+
+export function Tab() {
     return {
         created: function() {
             // Using slots, the parent Tabs component doesn't have a
@@ -19,7 +21,7 @@ module.exports = function(template) {
         props: [
             'data',
         ],
-        render: template.r,
-        staticRenderFns: template.s,
+        render: tab.r,
+        staticRenderFns: tab.s,
     }
 }

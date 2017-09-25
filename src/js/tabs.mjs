@@ -1,4 +1,6 @@
-module.exports = function(template) {
+import {tabs} from './templates'
+
+export function Tabs(template) {
     return {
         /**
         * Remove the popstate event listener after
@@ -106,8 +108,8 @@ module.exports = function(template) {
         props: [
             'tabs',
         ],
-        render: template.r,
-        staticRenderFns: template.s,
+        render: tabs.r,
+        staticRenderFns: tabs.s,
         watch: {
             $route: function() {
                 this.currentId = this.getCurrentTabId()
